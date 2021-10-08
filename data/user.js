@@ -1,0 +1,32 @@
+module.exports = users = [
+  {
+    id: 1,
+    email: 'admin@admin.com',
+    password: '$2b$10$OjsEG6ALXhNCORHQCgz7k.TKGneFvU1qqnEJRaq.koCklg8kpxQHK',
+    fullname: 'Agung Firmansyah',
+    role: 1,
+    avatar: 1,
+    cratedAt: '2021-10-06T04:07:28.713Z',
+    updatedAt: '2021-10-06T04:07:28.713Z',
+  },
+  {
+    id: 2,
+    email: 'agungfirid@gmail.com',
+    password: '$2b$10$OjsEG6ALXhNCORHQCgz7k.TKGneFvU1qqnEJRaq.koCklg8kpxQHK',
+    fullname: 'Agung Firmansyah',
+    role: 1,
+    avatar: 1,
+    cratedAt: '2021-10-06T04:07:28.713Z',
+    updatedAt: '2021-10-06T04:07:28.713Z',
+  },
+  {
+    id: 3,
+    email: 'bambang@gmail.com',
+    password: '$2b$10$OjsEG6ALXhNCORHQCgz7k.TKGneFvU1qqnEJRaq.koCklg8kpxQHK',
+    fullname: 'Bambang Santoso',
+    role: 2,
+    avatar: 2,
+    cratedAt: '2021-10-06T04:07:28.713Z',
+    updatedAt: '2021-10-06T04:07:28.713Z',
+  },
+];
