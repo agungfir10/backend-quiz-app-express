@@ -5,6 +5,17 @@ const router = express.Router();
 const { comparePassword, hashPassword } = require('../utils/password');
 const { makeId } = require('../utils/makeId');
 const { generateAccessToken } = require('../utils/jwt');
+const path = require('path');
+var sqlite3 = require('sqlite3').verbose();
+
+var db = new sqlite3.Database(
+  path.join(__dirname, '..', 'db', 'quiz.db'),
+  sqlite3.OPEN_READWRITE,
+  (err) => {
+    if (err) throw err;
+    console.log('database connected!');
+  }
+);
 
 router.post('/auth/login', (req, res) => {
   const { email, password } = req.body;
@@ -41,32 +52,29 @@ router.post('/auth/login', (req, res) => {
 router.post('/auth/register', (req, res) => {
   const { email, password, fullname } = req.body;
 
-  const foundEmail = users.findIndex((e) => e.email == email);
-  if (foundEmail === -1) {
-    const id = users.length;
-    user = {
-      id,
-      email,
-      password: hashPassword(password),
-      fullname,
-      role: 1,
-      avatar: 1,
-      verify: false,
-      createdAt: date,
-      updatedAt: date,
-    };
-    users.push(user);
-    res.status(200).json({
-      status: 200,
-      message: 'success',
-      data: user,
-    });
-  } else {
-    res.status(400).json({
-      status: 400,
-      message: 'email registered',
-    });
-  }
+  db.get(`SELECT * FROM users WHERE email='${email}'`, (err, row) => {
+    if (row === undefined) {
+      db.run(
+        `INSERT INTO users VALUES(null, '${fullname}', '${email}', '${hashPassword(
+          password
+        )}')`,
+        (err) => {
+          db.get(`SELECT * FROM users WHERE email='${email}'`, (err, row) => {
+            res.status(200).json({
+              status: 200,
+              message: 'success',
+              data: row,
+            });
+          });
+        }
+      );
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: 'email registered',
+      });
+    }
+  });
 });
 
 router.post('/auth/forgot_password', (req, res) => {

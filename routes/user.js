@@ -1,15 +1,28 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const { body, param, validationResult } = require('express-validator');
 const { authenticateToken } = require('../utils/jwt');
+var sqlite3 = require('sqlite3').verbose();
+
+var db = new sqlite3.Database(
+  path.join(__dirname, '..', 'db', 'quiz.db'),
+  sqlite3.OPEN_READWRITE,
+  (err) => {
+    if (err) throw err;
+    console.log('database connected!');
+  }
+);
 
 router
   .route('/users')
   .get((req, res) => {
-    res.status(200).json({
-      status: 200,
-      message: 'success',
-      data: users,
+    db.all('SELECT * FROM users', (err, rows) => {
+      res.status(200).json({
+        status: 200,
+        message: 'success',
+        data: rows,
+      });
     });
   })
   .post(

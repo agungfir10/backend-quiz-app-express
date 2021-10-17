@@ -38,9 +38,9 @@ app.get('/', (req, res) => {
   res.render('index.ejs');
 });
 app.use('/api', auth);
-app.use('/api', authenticateToken, user);
-app.use('/api', authenticateToken, article);
-app.use('/api', authenticateToken, category);
-app.use('/api', authenticateToken, quiz);
+app.use('/api', user);
+app.use('/api', article);
+app.use('/api', category);
+app.use('/api', quiz);
 console.log(`App running on https://localhost:${PORT}`);
 app.listen(PORT);
