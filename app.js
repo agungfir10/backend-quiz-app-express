@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.status(200).json(req.body);
+  res.render('index.ejs');
 });
 app.use('/api', auth);
 app.use('/api', authenticateToken, user);
