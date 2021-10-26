@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS articles;
 DROP TABLE IF EXISTS articles_categories;
-DROP TABLE IF EXISTS questions;
+DROP TABLE IF EXISTS articles;
 DROP TABLE IF EXISTS question_categories;
 DROP TABLE IF EXISTS question_subcategories;
+DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS question_reports;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -15,8 +15,15 @@ CREATE TABLE IF NOT EXISTS users (
     avatar SMALLINT,
     verify SMALLINT,
     token_verify VARCHAR(255),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE articles_categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS articles (
@@ -25,15 +32,25 @@ CREATE TABLE IF NOT EXISTS articles (
     body TEXT,
     video VARCHAR(255),
     category SMALLINT,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE articles_categories (
+CREATE TABLE question_categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE question_subcategories (
+    id SERIAL PRIMARY KEY,
+    id_category INTEGER,
+    name VARCHAR(255),
+    duration INTEGER,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE questions (
@@ -47,32 +64,16 @@ CREATE TABLE questions (
     option_c VARCHAR(255),
     option_d VARCHAR(255),
     option_e VARCHAR(255),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    explain TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
-
-CREATE TABLE question_categories (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255),
-    image VARCHAR(255),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);
-
-CREATE TABLE question_subcategories (
-    id SERIAL PRIMARY KEY,
-    id_category INTEGER,
-    name VARCHAR(255),
-    duration INTEGER,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);
-
 
 CREATE TABLE question_reports (
     id SERIAL PRIMARY KEY,
     id_user INTEGER,
-    id_question INTEGER,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    id_subcategory_question INTEGER,
+    point INTEGER,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );

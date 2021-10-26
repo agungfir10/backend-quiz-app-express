@@ -1,48 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
 const { body, param, validationResult } = require('express-validator');
 const { authenticateToken } = require('../utils/jwt');
-var sqlite3 = require('sqlite3').verbose();
-
-var db = new sqlite3.Database(
-  path.join(__dirname, '..', 'db', 'quiz.db'),
-  sqlite3.OPEN_READWRITE,
-  (err) => {
-    if (err) throw err;
-    console.log('database connected!');
-  }
-);
+const { db } = require('../utils/db');
 
 router
   .route('/users')
   .get((req, res) => {
-    db.all('SELECT * FROM users', (err, rows) => {
-      res.status(200).json({
-        status: 200,
-        message: 'success',
-        data: rows,
-      });
-    });
+    db.query(
+      'SELECT id,name, email, created_at, updated_at FROM users',
+      (err, results) => {
+        if (err) {
+          res.status(400).json({
+            status: 200,
+            message: err.message,
+          });
+        } else {
+          res.status(200).json({
+            status: 200,
+            message: 'success',
+            data: results.rows,
+          });
+        }
+      }
+    );
   })
   .post(
     authenticateToken,
     body('email').isEmail(),
+    body('name').isEmpty(),
     body('password').isLength({ min: 6 }),
     (req, res) => {
       const errors = validationResult(req);
       if (errors.isEmpty()) {
-        const { email, password, fullname, avatar } = req.body;
-        const user = {
-          id: users.length + 1,
-          email,
-          password,
-          fullname,
-          avatar: avatar || 1,
-          createdAt: date,
-          updatedAt: date,
-        };
-        users.push(user);
+        const { email, password, name, avatar } = req.body;
+
         res.status(200).json({
           status: 200,
           message: 'Success register',
@@ -55,19 +47,14 @@ router
         });
       }
     }
-  )
-  .put(authenticateToken, (req, res) => {
-    const { email, password, fullname, avatar } = req.body;
-    console.log(email, password, fullname, avatar);
-    res.send('PUT /api/users/');
-  });
+  );
+
 router.delete(
   '/users/:id',
   authenticateToken,
   param('id').isEmpty(),
   (req, res) => {
     const { id } = req.params;
-    let findID = users.findIndex((user, index) => user.id == id);
 
     const errors = validationResult(req);
     if (errors.isEmpty()) {

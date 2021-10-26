@@ -1,33 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
 const user = require('./routes/user');
 const article = require('./routes/article');
-const category = require('./routes/category');
+const article_category = require('./routes/article_category');
+const question_category = require('./routes/question_category');
+const question_subcategory = require('./routes/question_subcategory');
+const question = require('./routes/question');
+const question_report = require('./routes/question_report');
 const auth = require('./routes/auth');
-const quiz = require('./routes/quiz');
 const { authenticateToken } = require('./utils/jwt');
 const dotenv = require('dotenv');
 
 dotenv.config();
-
-require('./data/users');
-require('./data/articles');
-require('./data/date');
-require('./data/question_report');
-require('./data/categories');
-require('./data/categories_question');
-require('./data/questions');
-
 const app = express();
 const PORT = process.env.PORT;
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'pptnrml@gmail.com',
-    pass: 'pptnrml12',
-  },
-});
 
 app.use(express.static('public'));
 app.use(express.json());
@@ -40,7 +26,10 @@ app.get('/', (req, res) => {
 app.use('/api', auth);
 app.use('/api', user);
 app.use('/api', article);
-app.use('/api', category);
-app.use('/api', quiz);
+app.use('/api', article_category);
+app.use('/api', question_category);
+app.use('/api', question_subcategory);
+app.use('/api', question);
+app.use('/api', question_report);
 console.log(`App running on https://localhost:${PORT}`);
 app.listen(PORT);
